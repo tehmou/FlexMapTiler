@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<markers:Marker xmlns:mx="http://www.adobe.com/2006/mxml"
+				xmlns:markers="com.timotuominen.flex.maps.components.markers.*"
+				mouseChildren="false" currentState="normal"
+				scaleX="1.3" scaleY="1.3">
+	<mx:Script>
+		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			
+			private var _selected:Boolean;
+			
+			[Bindable]
+			public function get selected():Boolean
+			{
+				return _selected;
+			}
+
+			public function set selected(value:Boolean):void
+			{
+				_selected = value;
+				currentState = selected ? "selected" : "normal";
+			}
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				if(data.hasOwnProperty("selected"))
+				{
+					BindingUtils.bindProperty(this, "selected", data, "selected");
+				}
+			}
+
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				super.updateDisplayList(w, h);
+				
+				graphics.clear();
+				var gradM:Matrix = new Matrix;
+				gradM.createGradientBox(36, 36, 0, -18, -18);
+				/*graphics.beginGradientFill(
+					GradientType.RADIAL, [0xffffff, 0xffffff, 0x900000, 0x000000],
+					[1.0, 0.9, 0.6, 0.0], [0, 50, 200, 255], gradM
+				);*/
+				graphics.beginGradientFill(
+					GradientType.RADIAL, [0xffffff, 0xffffff, 0x004070, 0x000000],
+					[1.0, 1.0, 0.70, 0.0], [0, 30, 180, 255], gradM
+				);
+				graphics.drawCircle(0, 0, 20);
+				graphics.endFill();				
+			}
+			
+		]]>
+	</mx:Script>
+	<markers:states>
+		<mx:State name="normal"/>
+		<mx:State name="hidden"/>
+		<mx:State name="selected"/>
+	</markers:states>
+	<markers:transitions>
+		<mx:Transition fromState="selected" toState="normal">
+			<mx:Zoom target="{this}" zoomHeightTo="1.3" zoomWidthTo="1.3"
+					 duration="150"/>
+		</mx:Transition>
+		<mx:Transition fromState="normal" toState="selected">
+			<mx:Zoom target="{this}" zoomHeightTo="2.0" zoomWidthTo="2.0"
+					 duration="50"/>
+		</mx:Transition>
+		<mx:Transition toState="hidden">
+			<mx:Fade alphaTo="0.0"/>
+		</mx:Transition>
+		<mx:Transition fromState="hidden">
+			<mx:Fade alphaTo="1.0"/>			
+		</mx:Transition>
+	</markers:transitions>
+</markers:Marker>

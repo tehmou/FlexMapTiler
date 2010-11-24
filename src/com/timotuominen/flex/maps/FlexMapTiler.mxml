@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:FlexMapTilerCore xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:maps="com.timotuominen.flex.maps.*"
+						  width="100%" height="100%"
+						  creationComplete="creationCompleteHandler(event)" 
+						  xmlns:components="com.timotuominen.flex.maps.components.*">
+	<mx:Script>
+		<![CDATA[
+			import com.timotuominen.flex.maps.components.controls.IMapControl;
+			import com.timotuominen.flex.maps.components.markers.IMarker;
+			import com.timotuominen.flex.maps.events.MapControlEvent;
+			import com.timotuominen.flex.maps.utils.MapTileLoader;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.SandboxMouseEvent;
+			
+			public function setVisibleLayer(value:String):void
+			{
+				tileSurface.debug_setVisibleLayer(value);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			}
+			
+			private var mouseDown:Boolean = false;
+			private var lastDragLocation:Point;
+			
+			private function mouseDownHandler(e:MouseEvent) : void
+			{
+				mouseDown = true;
+				lastDragLocation = new Point(e.stageX, e.stageY);
+				stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+				stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			}
+			
+			private function mouseUpHandler(e:MouseEvent) : void
+			{
+				mouseDown = false;
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);				
+			}
+			
+			private function mouseMoveHandler(e:MouseEvent) : void
+			{
+				if(!mouseDown) return;
+				
+				var delta:Point = new Point(e.stageX - lastDragLocation.x, e.stageY - lastDragLocation.y);
+				tileSurface.moveByPixels(delta);
+				lastDragLocation.x = e.stageX;
+				lastDragLocation.y = e.stageY;
+			}
+			
+			public function addMarker(marker:IMarker) : void
+			{
+				markerLayer.addMarker(marker);
+				invalidateDisplayList();
+			}
+
+			public function addControl(control:IMapControl) : void
+			{
+				controlLayer.addChild(control as DisplayObject);
+				control.addEventListener(
+					MapControlEvent.ZOOM_IN,
+					function(e:Event) : void
+					{
+						if(zoomLevel < 18)
+							zoomLevel++;
+					}
+				);
+				control.addEventListener(
+					MapControlEvent.ZOOM_OUT,
+					function(e:Event) : void
+					{
+						if(zoomLevel > 0)
+							zoomLevel--;
+					}
+				);
+			}
+			
+			public function set controls(value:Array) : void
+			{
+				for each(var control:IMapControl in value)
+				{
+					addControl(control);
+				}
+			}
+			
+			public function set endPointURL(value:String) : void
+			{
+				MapTileLoader.ENDPOINT = value;
+			}
+
+		]]>
+	</mx:Script>
+</components:FlexMapTilerCore>

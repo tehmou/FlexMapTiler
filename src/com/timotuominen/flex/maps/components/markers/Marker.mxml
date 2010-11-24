@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:UIComponent xmlns:mx="http://www.adobe.com/2006/mxml"
+				implements="com.timotuominen.flex.maps.components.markers.IMarker"
+				mouseChildren="false">
+	<mx:Script>
+		<![CDATA[
+
+			import com.timotuominen.flex.maps.model.LatLng;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			
+			private var _latlng:LatLng;
+			private var _data:Object;
+			private var dataWatcher:ChangeWatcher;
+
+			public function get latlng():LatLng
+			{
+				return _latlng;
+			}
+			
+			public function set latlng(value:LatLng):void
+			{
+				_latlng = value;
+				dispatchEvent(new Event("latlngChanged"));
+			}
+			
+			public function get data():Object
+			{
+				return _data;
+			}
+			
+			public function set data(value:Object):void
+			{
+				if(dataWatcher)
+				{
+					dataWatcher.unwatch();
+				}
+				_data = value;
+				
+				if(data.hasOwnProperty("latlng"))
+				{
+					BindingUtils.bindSetter(locationSetter, data, "latlng");					
+				}
+			}
+			
+			private function locationSetter(value:LatLng) : void
+			{
+				this.latlng = value;
+			}
+			
+			override protected function createChildren() : void
+			{
+				super.createChildren();
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number) : void
+			{
+				super.updateDisplayList(w, h);
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:filters>
+		<mx:DropShadowFilter/>
+	</mx:filters>
+</mx:UIComponent>
