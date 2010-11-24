@@ -25,7 +25,7 @@ package com.timotuominen.flex.maps.utils
 
 		static private const LOAD_TIMEOUT:Number = 15000;
 		
-		static public var ENDPOINT:String = "http://maptile.maps.svc.ovi.com/maptiler/maptile/newest/normal.day";
+		static public var ENDPOINT:String = "";
 
 		public var mapTile:MapTile;
 
