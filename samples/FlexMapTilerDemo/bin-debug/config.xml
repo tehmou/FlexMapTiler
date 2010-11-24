@@ -1,0 +1,3 @@
+<config>
+	<endPointURL>http://maptile.maps.svc.ovi.com/maptiler/maptile/newest/normal.day/{zoomLevel}/{x}/{y}/{size}/png8</endPointURL>
+</config>

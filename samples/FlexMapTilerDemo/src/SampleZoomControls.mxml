@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="com.timotuominen.flex.maps.components.controls.IMapControl">
+	<fx:Script>
+		<![CDATA[
+			import com.timotuominen.flex.maps.components.controls.IMapControl;
+			import com.timotuominen.flex.maps.events.MapControlEvent;
+		]]>
+	</fx:Script>
+	<s:Button label="+" width="30" height="30"
+			  click="dispatchEvent(new MapControlEvent(MapControlEvent.ZOOM_IN))"/>
+	<s:Button label="-" width="30" height="30" y="32"
+			  click="dispatchEvent(new MapControlEvent(MapControlEvent.ZOOM_OUT))"/>
+</s:Group>
