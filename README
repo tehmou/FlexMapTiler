@@ -1,0 +1,8 @@
+This component only provides a system to display map tiles, but it does not include them. Hence to be able to use FlexMapTiler you have to access to a server that provides the aforementioned tile images.
+
+FlexMapTiler assumes the following properties from the tiles:
+
+- world map is a square
+- on a given zoom level n, the number of map tiles is 2^n by 2^n
+
+The server is expected to use rest for defining the parameters, though the order is arbitrary. You give the url as http://youraddress.com/{zoomLevel}/{x}/{y}/{size} in which x is the index of the requested tile as in longitude "coordinate" starting from 0, and y is the corresponding for latitude. zoomLevel is a non-negative integer, the maximum of which depends on the server used. size is the dimension of a single map tile, assuming it is a rectangle - most commonly this would be 256, resulting in tiles of 256x256.

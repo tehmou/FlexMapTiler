@@ -42,6 +42,10 @@ package com.timotuominen.flex.maps.utils
 		private function createRequestURL() : void
 		{
 			var requestString:String = ENDPOINT;
+			if(!requestString || requestString == "")
+			{
+				throw new IllegalOperationError("endPointURL for map tiles is not specified, please see README.");				
+			}
 			requestString = requestString.replace("{zoomLevel}", mapTile.zoomLevel);
 			requestString = requestString.replace("{x}", mapTile.x);
 			requestString = requestString.replace("{y}", mapTile.y);
