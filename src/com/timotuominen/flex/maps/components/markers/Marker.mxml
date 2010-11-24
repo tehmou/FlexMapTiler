@@ -61,8 +61,4 @@
 			
 		]]>
 	</mx:Script>
-
-	<mx:filters>
-		<mx:DropShadowFilter/>
-	</mx:filters>
 </mx:UIComponent>

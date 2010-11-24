@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:maps="com.timotuominen.flex.maps.*" xmlns:local="*" xmlns:markers="com.timotuominen.flex.maps.components.markers.*"
+			   minWidth="640" minHeight="480">
+	<fx:Script>
+		<![CDATA[
+			import com.timotuominen.flex.maps.FlexMapTiler;
+			import com.timotuominen.flex.maps.model.LatLng;
+			
+			import mx.events.FlexEvent;
+			
+			public function createMap(endPointURL : String='http://b.tile.openstreetmap.org/{zoomLevel}/{x}/{y}.png') : void
+			{
+				flexMapTiler.endPointURL = endPointURL;
+				addElementAt(flexMapTiler, 0);
+				fadeOutPanel.play();
+			}
+			
+			protected function startAddMarker() : void
+			{
+				flexMapTiler.addEventListener(MouseEvent.MOUSE_DOWN, mapClickHandler);
+			}
+			
+			protected function mapClickHandler(e : MouseEvent) : void
+			{
+				var coords : Point = new Point(e.stageX, e.stageY);
+				var latlng : LatLng = flexMapTiler.fromGlobalPixelToLatLng(coords);
+				var marker : GlowingMarker = new GlowingMarker;
+				marker.latlng = latlng;
+				flexMapTiler.addMarker(marker);
+				flexMapTiler.removeEventListener(MouseEvent.MOUSE_DOWN, mapClickHandler);
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:Fade id="fadeOutPanel" alphaTo="0" target="{panel}" effectEnd="panel.visible=false" duration="600"/>
+		<maps:FlexMapTiler id="flexMapTiler" width="100%" height="100%">
+			<maps:controls>
+				<local:SampleZoomControls x="20" y="20"/>
+				<s:Button x="70" y="20" width="130" height="20" label="Add marker" click="startAddMarker()"/>
+			</maps:controls>
+			<maps:markers>
+				<markers:GlowingMarker latlng="{new LatLng(0, 0)}"/>
+				<markers:GlowingMarker latlng="{new LatLng(-400, 50)}"/>
+			</maps:markers>
+		</maps:FlexMapTiler>
+	</fx:Declarations>
+	
+	<s:Panel title="Settings" id="panel"
+			 width="500" horizontalCenter="0" verticalCenter="0">
+		<s:layout>
+			<s:VerticalLayout gap="10" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+		</s:layout>
+		<s:TextInput id="tileServerURLInput" width="100%"/>
+		<s:HGroup width="100%">
+			<s:Button label="Use Open Street Maps" width="100%" click="createMap()"/>
+			<s:Button label="OK" width="100%" click="createMap(tileServerURLInput.text)"/>
+		</s:HGroup>
+		<s:RichEditableText width="100%" fontSize="12" alpha="0.5" selectable="true">
+			<s:text><![CDATA[The server is expected to use REST for defining the parameters, though the order is arbitrary. You give the url as <pre>http://youraddress.com/{zoomLevel}/{x}/{y}/{size}</pre> in which x is the index of the requested tile as in longitude 'coordinate' starting from 0, and y is the corresponding for latitude. zoomLevel is a non-negative integer, the maximum of which depends on the server used.]]></s:text>
+		</s:RichEditableText>
+	</s:Panel>
+</s:Application>

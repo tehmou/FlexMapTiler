@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <components:FlexMapTilerCore xmlns:mx="http://www.adobe.com/2006/mxml"
-						  xmlns:maps="com.timotuominen.flex.maps.*"
-						  width="100%" height="100%"
-						  creationComplete="creationCompleteHandler(event)" 
-						  xmlns:components="com.timotuominen.flex.maps.components.*">
+							 xmlns:maps="com.timotuominen.flex.maps.*"
+							 width="100%" height="100%"
+							 creationComplete="creationCompleteHandler(event)" 
+							 xmlns:components="com.timotuominen.flex.maps.components.*">
 	<mx:Script>
 		<![CDATA[
-			import com.timotuominen.flex.maps.components.controls.IMapControl;
 			import com.timotuominen.flex.maps.components.markers.IMarker;
 			import com.timotuominen.flex.maps.events.MapControlEvent;
 			import com.timotuominen.flex.maps.utils.MapTileLoader;
@@ -23,6 +22,7 @@
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+				markerLayer.invalidateProperties();
 			}
 			
 			private var mouseDown:Boolean = false;
@@ -58,10 +58,10 @@
 				markerLayer.addMarker(marker);
 				invalidateDisplayList();
 			}
-
-			public function addControl(control:IMapControl) : void
+			
+			public function addControl(control:DisplayObject) : void
 			{
-				controlLayer.addChild(control as DisplayObject);
+				controlLayer.addChild(control);
 				control.addEventListener(
 					MapControlEvent.ZOOM_IN,
 					function(e:Event) : void
@@ -82,9 +82,17 @@
 			
 			public function set controls(value:Array) : void
 			{
-				for each(var control:IMapControl in value)
+				for each(var control:DisplayObject in value)
 				{
 					addControl(control);
+				}
+			}
+			
+			public function set markers(value:Array) : void
+			{
+				for each(var marker:IMarker in value)
+				{
+					addMarker(marker);
 				}
 			}
 			
@@ -92,7 +100,7 @@
 			{
 				MapTileLoader.ENDPOINT = value;
 			}
-
+			
 		]]>
 	</mx:Script>
 </components:FlexMapTilerCore>
