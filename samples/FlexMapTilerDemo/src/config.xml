@@ -1,0 +1,3 @@
+<config>
+	<endPointURL><![CDATA[http://b.tile.openstreetmap.org/{zoomLevel}/{x}/{y}.png]]></endPointURL>
+</config>
